@@ -20,4 +20,6 @@ pub enum JwtError {
 
     #[error("Invalid signature")]
     InvalidSignature,
+
+    AlgError(Box<dyn std::error::Error>),
 }

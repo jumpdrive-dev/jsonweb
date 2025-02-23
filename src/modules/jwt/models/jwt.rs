@@ -42,7 +42,9 @@ where T : Serialize + for<'a> Deserialize<'a>,
         Ok(format!("{}.{}", target, signature_string))
     }
 
-    pub fn verify<A: JwtAlg>(token: &str, algorithm: &A) -> Result<Jwt<T, C>, JwtError> {
+    pub fn verify<A: JwtAlg>(token: &str, algorithm: &A) -> Result<Jwt<T, C>, JwtError>
+    where <A as JwtAlg>::Error: 'static
+    {
         let mut parts = token.split('.');
 
         let header_string = parts.next().ok_or(JwtError::NoHeader)?;
@@ -61,7 +63,10 @@ where T : Serialize + for<'a> Deserialize<'a>,
         let signature_bytes = BASE64_URL_SAFE_NO_PAD.decode(signature_string.as_bytes())?;
 
         let target = format!("{}.{}", header_string, payload_string);
-        if !algorithm.verify(&target, &signature_bytes) {
+        let verified = algorithm.verify(&target, &signature_bytes)
+            .map_err(|e| JwtError::AlgError(Box::new(e)))?;
+
+        if !verified {
             return Err(JwtError::InvalidSignature);
         }
 
