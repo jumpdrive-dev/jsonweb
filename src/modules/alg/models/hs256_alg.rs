@@ -38,3 +38,25 @@ impl JwtAlg for HS256Alg {
         signature == finalized
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use base64::Engine;
+    use base64::prelude::BASE64_URL_SAFE_NO_PAD;
+    use crate::modules::alg::{HS256Alg, JwtAlg};
+
+    #[test]
+    fn hs256_algorithm_works_as_expected() {
+        let payload = "something";
+        let alg = HS256Alg::new("qwed".as_ref()).unwrap();
+
+        let signature_bytes = alg.sign(payload);
+        let signature_string = BASE64_URL_SAFE_NO_PAD.encode(&signature_bytes);
+
+        assert_eq!(signature_string, "FFVkP45MwfpRlEBIeb-MGn3z-FbSDftIjay6BDF-Xyc");
+
+        let verify = alg.verify(payload, &signature_bytes);
+
+        assert!(verify);
+    }
+}
