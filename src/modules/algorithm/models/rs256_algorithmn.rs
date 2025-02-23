@@ -3,22 +3,21 @@ use rsa::pkcs1v15::{Signature, SigningKey};
 use rsa::signature::{Keypair, SignatureEncoding, Signer, Verifier};
 use serde::{Deserialize, Serialize};
 use sha2::Sha256;
-use crate::modules::alg::JwtAlg;
-use rsa::RsaPrivateKey;
+use crate::algorithm::JwtAlg;
 
-pub struct RS256Alg {
+pub struct RS256Algorithm {
     inner: SigningKey<Sha256>
 }
 
-impl RS256Alg {
+impl RS256Algorithm {
     pub fn new(key: SigningKey<Sha256>) -> Self {
-        RS256Alg {
+        RS256Algorithm {
             inner: key,
         }
     }
 }
 
-impl JwtAlg for RS256Alg {
+impl JwtAlg for RS256Algorithm {
     type Error = rsa::signature::Error;
 
     fn alg() -> impl AsRef<str> {
@@ -43,7 +42,7 @@ mod tests {
     use pkcs1::DecodeRsaPrivateKey;
     use rsa::pkcs1v15::SigningKey;
     pub use rsa::RsaPrivateKey;
-    use crate::modules::alg::{JwtAlg, RS256Alg};
+    use crate::algorithm::{JwtAlg, RS256Algorithm};
 
     #[test]
     fn rs256_algorithm_works_as_expected() {
@@ -51,7 +50,7 @@ mod tests {
 
         let private_key = RsaPrivateKey::from_pkcs1_pem(include_str!("../../../../test-files/rs256.key")).unwrap();
         let signing_key = SigningKey::new(private_key);
-        let alg = RS256Alg::new(signing_key);
+        let alg = RS256Algorithm::new(signing_key);
 
         let signature_bytes = alg.sign(payload);
         let signature_string = BASE64_URL_SAFE_NO_PAD.encode(&signature_bytes);

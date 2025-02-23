@@ -1,2 +1,2 @@
-pub mod jwt;
-pub mod alg;
+pub mod token;
+pub mod algorithm;

@@ -3,9 +3,8 @@ use std::fmt::{Debug, Formatter};
 use base64::Engine;
 use base64::prelude::BASE64_URL_SAFE_NO_PAD;
 use serde::{Deserialize, Serialize};
-use crate::modules::alg::JwtAlg;
-use crate::modules::jwt::error::JwtError;
-use crate::modules::jwt::models::jwt_header::JwtHeader;
+use crate::algorithm::JwtAlg;
+use crate::token::{JwtError, JwtHeader};
 
 pub struct Jwt<T, C = ()>
 where T : Serialize + for<'a> Deserialize<'a>,
@@ -91,24 +90,3 @@ where T : Serialize + for<'a> Deserialize<'a>
         }
     }
 }
-
-// impl<T, C> Debug for Jwt<T, C>
-// where T : Serialize + for<'a> Deserialize<'a>,
-//     C : Serialize + for<'a> Deserialize<'a>,
-// {
-//     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-//         write!(f, "JWT {{}}")
-//     }
-// }
-
-// impl<T, C> Default for Jwt<T, C>
-// where T : Serialize + for<'a> Deserialize<'a>,
-//     C : Serialize + for<'a> Deserialize<'a>,
-// {
-//     fn default() -> Jwt<(), ()> {
-//         Jwt {
-//             cty: None,
-//             payload: (),
-//         }
-//     }
-// }

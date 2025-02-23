@@ -2,21 +2,21 @@ use std::convert::Infallible;
 use hmac::{Hmac, Mac};
 use hmac::digest::InvalidLength;
 use sha2::Sha256;
-use crate::modules::alg::JwtAlg;
+use crate::algorithm::JwtAlg;
 
-pub struct HS256Alg {
+pub struct HS256Algorithm {
     inner: Hmac<Sha256>,
 }
 
-impl HS256Alg {
+impl HS256Algorithm {
     pub fn new(key: &[u8]) -> Result<Self, InvalidLength> {
-        Ok(HS256Alg {
+        Ok(HS256Algorithm {
             inner: Hmac::<Sha256>::new_from_slice(key)?
         })
     }
 }
 
-impl JwtAlg for HS256Alg {
+impl JwtAlg for HS256Algorithm {
     type Error = Infallible;
 
     fn alg() -> impl AsRef<str> {
@@ -46,12 +46,12 @@ impl JwtAlg for HS256Alg {
 mod tests {
     use base64::Engine;
     use base64::prelude::BASE64_URL_SAFE_NO_PAD;
-    use crate::modules::alg::{HS256Alg, JwtAlg};
+    use crate::modules::algorithm::{HS256Algorithm, JwtAlg};
 
     #[test]
     fn hs256_algorithm_works_as_expected() {
         let payload = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoaiI6dHJ1ZX0";
-        let alg = HS256Alg::new("qwed".as_ref()).unwrap();
+        let alg = HS256Algorithm::new("qwed".as_ref()).unwrap();
 
         let signature_bytes = alg.sign(payload);
         let signature_string = BASE64_URL_SAFE_NO_PAD.encode(&signature_bytes);
