@@ -1,7 +1,4 @@
-use std::convert::Infallible;
-use p256::ecdsa::signature::Signer;
 use p256::ecdsa::SigningKey;
-use crate::algorithm::JwtAlg;
 
 pub struct ES256Algorithm {
     inner: SigningKey,
@@ -15,18 +12,30 @@ impl ES256Algorithm {
     }
 }
 
-impl JwtAlg for ES256Algorithm {
-    type Error = Infallible;
+#[cfg(test)]
+mod tests {
+    use base64::Engine;
+    use base64::prelude::BASE64_URL_SAFE_NO_PAD;
+    use p256::ecdsa::SigningKey;
+    use crate::algorithm::models::es256_algorithm::ES256Algorithm;
 
-    fn alg() -> impl AsRef<str> {
-        "ES256"
-    }
+    #[test]
+    fn es256_algorithm_works_as_expected() {
+        let payload = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0";
 
-    fn sign(&self, payload: &str) -> Vec<u8> {
-        self.inner.sign(payload.as_bytes())
-    }
+        let signing_key = SigningKey::from_sec1_pem("").unwrap();
 
-    fn verify(&self, payload: &str, signature: &[u8]) -> Result<bool, Self::Error> {
-        todo!()
+        // let alg = ES256Algorithm::new(signing_key);
+
+        // let signature_bytes = alg.sign(payload);
+        // let signature_string = BASE64_URL_SAFE_NO_PAD.encode(&signature_bytes);
+        //
+        // assert_eq!(signature_string, "LM8raaYjKi8HAt4-GsYPlQFSpOJWJUCtUa70beULD6t0Wwvzvn7L3u72KZUfGTgZ7xu-vfAXHrkIRR0ofF2TIw");
+        //
+        // let verify = alg.verify(payload, &signature_bytes).unwrap();
+        //
+        // assert!(verify);
     }
 }
+
+//
