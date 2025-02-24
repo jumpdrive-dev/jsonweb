@@ -17,13 +17,16 @@ mod tests {
     use base64::Engine;
     use base64::prelude::BASE64_URL_SAFE_NO_PAD;
     use p256::ecdsa::SigningKey;
+    use p256::SecretKey;
     use crate::algorithm::models::es256_algorithm::ES256Algorithm;
 
     #[test]
     fn es256_algorithm_works_as_expected() {
         let payload = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0";
 
-        let signing_key = SigningKey::from_sec1_pem("").unwrap();
+        let signing_key = SecretKey::from_sec1_pem(include_str!("../../../../test-files/es256.key"));
+
+        dbg!(signing_key);
 
         // let alg = ES256Algorithm::new(signing_key);
 
