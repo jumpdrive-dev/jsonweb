@@ -13,10 +13,10 @@ jsonweb = { git = "https://github.com/Jumpdrive-dev/jsonweb", tag = "1.0.0" }
 
 ## Features
 
-- [ ] Simple JWT signing and verifying.
-- [ ] Implementation of common algorithms:
+- [x] Simple JWT signing and verifying.
+- [x] Implementation of common algorithms:
   - [x] HS256
   - [x] RS256
-  - [ ] ES256
+  - [x] ES256
   - [x] None
 - [ ] JWKs
