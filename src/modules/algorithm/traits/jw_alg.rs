@@ -1,4 +1,4 @@
-pub trait JwtAlg {
+pub trait JwAlg {
     type Error: std::error::Error;
 
     fn alg() -> impl AsRef<str>;

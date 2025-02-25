@@ -2,7 +2,7 @@ use std::convert::Infallible;
 use hmac::{Hmac, Mac};
 use hmac::digest::InvalidLength;
 use sha2::Sha256;
-use crate::algorithm::JwtAlg;
+use crate::algorithm::JwAlg;
 
 pub struct HS256Algorithm {
     inner: Hmac<Sha256>,
@@ -16,7 +16,7 @@ impl HS256Algorithm {
     }
 }
 
-impl JwtAlg for HS256Algorithm {
+impl JwAlg for HS256Algorithm {
     type Error = Infallible;
 
     fn alg() -> impl AsRef<str> {
@@ -46,7 +46,7 @@ impl JwtAlg for HS256Algorithm {
 mod tests {
     use base64::Engine;
     use base64::prelude::BASE64_URL_SAFE_NO_PAD;
-    use crate::modules::algorithm::{HS256Algorithm, JwtAlg};
+    use crate::modules::algorithm::{HS256Algorithm, JwAlg};
 
     #[test]
     fn hs256_algorithm_works_as_expected() {
