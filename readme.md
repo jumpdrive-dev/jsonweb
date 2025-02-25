@@ -8,7 +8,7 @@ I currently have no intentions to publish this to crates.io, so for now if you w
 dependency using:
 
 ```toml
-# todo
+jsonweb = { git = "https://github.com/Jumpdrive-dev/jsonweb", tag = "1.0.0" }
 ```
 
 ## Features
