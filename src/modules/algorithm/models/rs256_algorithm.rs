@@ -3,7 +3,7 @@ use rsa::pkcs1v15::{Signature, SigningKey};
 use rsa::signature::{Keypair, SignatureEncoding, Signer, Verifier};
 use serde::{Deserialize, Serialize};
 use sha2::Sha256;
-use crate::algorithm::JwtAlg;
+use crate::algorithm::JwAlg;
 
 pub struct RS256Algorithm {
     inner: SigningKey<Sha256>
@@ -17,7 +17,7 @@ impl RS256Algorithm {
     }
 }
 
-impl JwtAlg for RS256Algorithm {
+impl JwAlg for RS256Algorithm {
     type Error = rsa::signature::Error;
 
     fn alg() -> impl AsRef<str> {
@@ -42,7 +42,7 @@ mod tests {
     use pkcs1::DecodeRsaPrivateKey;
     use rsa::pkcs1v15::SigningKey;
     pub use rsa::RsaPrivateKey;
-    use crate::algorithm::{JwtAlg, RS256Algorithm};
+    use crate::algorithm::{JwAlg, RS256Algorithm};
 
     #[test]
     fn rs256_algorithm_works_as_expected() {

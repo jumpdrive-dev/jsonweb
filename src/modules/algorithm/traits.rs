@@ -1,1 +1,1 @@
-pub mod jwt_alg;
+pub mod jw_alg;

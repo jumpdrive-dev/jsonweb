@@ -1,9 +1,9 @@
 use std::convert::Infallible;
-use crate::algorithm::JwtAlg;
+use crate::algorithm::JwAlg;
 
 pub struct NoneAlgorithm;
 
-impl JwtAlg for NoneAlgorithm {
+impl JwAlg for NoneAlgorithm {
     type Error = Infallible;
 
     fn alg() -> impl AsRef<str> {
