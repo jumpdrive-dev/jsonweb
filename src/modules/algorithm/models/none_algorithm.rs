@@ -1,6 +1,7 @@
 use std::convert::Infallible;
 use crate::algorithm::JwAlg;
 
+#[derive(Clone, Debug)]
 pub struct NoneAlgorithm;
 
 impl JwAlg for NoneAlgorithm {

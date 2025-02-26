@@ -1,3 +1,4 @@
+use std::fmt::{Debug, Formatter};
 pub use rsa::pkcs1::DecodeRsaPrivateKey;
 use rsa::pkcs1v15::{Signature, SigningKey};
 use rsa::signature::{Keypair, SignatureEncoding, Signer, Verifier};
@@ -5,6 +6,7 @@ use serde::{Deserialize, Serialize};
 use sha2::Sha256;
 use crate::algorithm::JwAlg;
 
+#[derive(Clone)]
 pub struct RS256Algorithm {
     inner: SigningKey<Sha256>
 }
@@ -32,6 +34,12 @@ impl JwAlg for RS256Algorithm {
         let signature = Signature::try_from(signature)?;
 
         Ok(self.inner.verifying_key().verify(payload.as_bytes(), &signature).is_ok())
+    }
+}
+
+impl Debug for RS256Algorithm {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "RS256Algorithm {{ .. }}")
     }
 }
 

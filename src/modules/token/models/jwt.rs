@@ -150,6 +150,14 @@ impl Default for Jwt<Value> {
     }
 }
 
+impl<T> Debug for Jwt<T>
+where T : Serialize + for<'a> Deserialize<'a> + Debug,
+{
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Jwt {{ claims: {:?}, payload: {:?} }}", self.claims, self.payload)
+    }
+}
+
 impl<T> Jwt<T>
 where T : Serialize + for<'a> Deserialize<'a>
 {

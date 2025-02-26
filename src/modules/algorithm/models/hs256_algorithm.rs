@@ -1,9 +1,11 @@
 use std::convert::Infallible;
+use std::fmt::{Debug, Formatter};
 use hmac::{Hmac, Mac};
 use hmac::digest::InvalidLength;
 use sha2::Sha256;
 use crate::algorithm::JwAlg;
 
+#[derive(Clone)]
 pub struct HS256Algorithm {
     inner: Hmac<Sha256>,
 }
@@ -39,6 +41,12 @@ impl JwAlg for HS256Algorithm {
             .to_vec();
 
         Ok(signature == finalized)
+    }
+}
+
+impl Debug for HS256Algorithm {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "HS256Algorithm {{ .. }}")
     }
 }
 

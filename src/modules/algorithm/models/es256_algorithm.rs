@@ -1,4 +1,5 @@
 use std::convert::Infallible;
+use std::fmt::{Debug, Formatter};
 use p256::ecdsa::{SigningKey, Signature, signature::Signer};
 use p256::ecdsa::signature::Verifier;
 use crate::algorithm::JwAlg;
@@ -6,6 +7,7 @@ use crate::algorithm::JwAlg;
 /// ```shell
 /// openssl genpkey -algorithm EC -pkeyopt ec_paramgen_curve:P-256 -out es256.pem
 /// ```
+#[derive(Clone)]
 pub struct ES256Algorithm {
     inner: SigningKey,
 }
@@ -35,6 +37,12 @@ impl JwAlg for ES256Algorithm {
         let signature = Signature::try_from(signature).unwrap();
 
         Ok(verifying_key.verify(payload.as_bytes(), &signature).is_ok())
+    }
+}
+
+impl Debug for ES256Algorithm {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "ES256Algorithm {{ .. }}")
     }
 }
 
