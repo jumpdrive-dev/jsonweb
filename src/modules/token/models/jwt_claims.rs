@@ -1,5 +1,4 @@
-use std::borrow::Cow;
-use chrono::{Duration, Utc};
+use chrono::{DateTime, Duration, Utc};
 use serde::{Deserialize, Serialize};
 use crate::token::JwtError;
 
@@ -72,14 +71,16 @@ pub struct JwtClaims {
 }
 
 impl JwtClaims {
-    pub fn any_set(&self) -> bool {
-        self.iss.is_some()
+    pub fn is_empty(&self) -> bool {
+        let any_set = self.iss.is_some()
             || self.sub.is_some()
             || self.aud.is_some()
             || self.exp.is_some()
             || self.nbf.is_some()
             || self.iat.is_some()
-            || self.jti.is_some()
+            || self.jti.is_some();
+
+        any_set
     }
 
     pub fn now() -> JwtClaims {
@@ -104,24 +105,34 @@ impl JwtClaims {
             sub: None,
             aud: None,
             exp: Some(now_timestamp + grace),
-            nbf: Some(now_timestamp + grace),
-            iat: Some(now_timestamp - grace),
+            nbf: Some(now_timestamp - grace),
+            iat: Some(now_timestamp),
             jti: None,
         }
     }
 
-    pub fn with_issuer(mut self, issuer: impl Into<String>) -> Self {
+    pub fn issuer(mut self, issuer: impl Into<String>) -> Self {
         self.iss = Some(issuer.into());
         self
     }
 
-    pub fn with_subject(mut self, subject: impl Into<String>) -> Self {
+    pub fn subject(mut self, subject: impl Into<String>) -> Self {
         self.sub = Some(subject.into());
         self
     }
 
-    pub fn for_audience(mut self, audience: impl Into<String>) -> Self {
+    pub fn audience(mut self, audience: impl Into<String>) -> Self {
         self.aud = Some(audience.into());
+        self
+    }
+
+    pub fn issued_at(mut self, issued_at: DateTime<Utc>) -> Self {
+        self.iat = Some(issued_at.timestamp());
+        self
+    }
+
+    pub fn issued_at_timestamp(mut self, timestamp: i64) -> self {
+        self.iat = Some(timestamp);
         self
     }
 
@@ -130,13 +141,52 @@ impl JwtClaims {
         self
     }
 
-    pub fn valid_after(mut self, duration: Duration) -> Self {
+    pub fn expire_in_seconds(mut self, seconds: i64) -> Self {
+        self.exp = Some(Utc::now().timestamp() + seconds);
+        self
+    }
+
+    pub fn not_before(mut self, duration: Duration) -> Self {
         self.nbf = Some(Utc::now().timestamp() + duration.num_seconds());
+        self
+    }
+
+    pub fn not_before_seconds(mut self, seconds: i64) -> Self {
+        self.nbf = Some(Utc::now().timestamp() + seconds);
         self
     }
 
     pub fn with_jti(mut self, jti: impl Into<String>) -> Self {
         self.jti = Some(jti.into());
+        self
+    }
+
+    /// Overwrites the current values with the other values, copying the ones that are set.
+    pub fn with_merge(mut self, other: &JwtClaims) -> JwtClaims {
+        if let Some(nbf) = &other.nbf {
+            self.nbf = Some(nbf.clone());
+        }
+
+        if let Some(exp) = &other.exp {
+            self.exp = Some(exp.clone());
+        }
+
+        if let Some(iat) = &other.iat {
+            self.iat = Some(iat.clone());
+        }
+
+        if let Some(iss ) = &other.iss {
+            self.iss = Some(iss.clone());
+        }
+
+        if let Some(aud ) = &other.aud {
+            self.aud = Some(aud.clone());
+        }
+
+        if let Some(jti) = &other.jti {
+            self.jti = Some(jti.clone());
+        }
+
         self
     }
 
