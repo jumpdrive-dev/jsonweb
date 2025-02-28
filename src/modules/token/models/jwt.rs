@@ -63,7 +63,7 @@ where T : Serialize + for<'a> Deserialize<'a>,
     /// instance with the expected payload. Note that this does not check any claims. To verify
     /// basic expiry claims you can use [Jwt::verify_now] or you can further verify the token using
     /// [Jwt::against] or [Jwt::guard].
-    pub fn verify<A: JwAlg>(token: &str, algorithm: &A) -> Result<Jwt<T>, JwtError>
+    pub fn check<A: JwAlg>(token: &str, algorithm: &A) -> Result<Jwt<T>, JwtError>
     where <A as JwAlg>::Error: 'static
     {
         let mut parts = token.split('.');
@@ -101,12 +101,12 @@ where T : Serialize + for<'a> Deserialize<'a>,
         })
     }
 
-    /// Largely the same as [Jwt::verify], but also verifies basic expiry claims. You can further
+    /// Largely the same as [Jwt::check], but also verifies basic expiry claims. You can further
     /// verify the token using [Jwt::against] or [Jwt::guard].
     pub fn verify_now<A: JwAlg>(token: &str, algorithm: &A) -> Result<Jwt<T>, JwtError>
     where <A as JwAlg>::Error: 'static
     {
-        let jwt = Jwt::<T>::verify(token, algorithm)?
+        let jwt = Jwt::<T>::check(token, algorithm)?
             .against(&JwtClaims::now())?;
 
         Ok(jwt)

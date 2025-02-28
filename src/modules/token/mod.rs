@@ -20,7 +20,7 @@ mod tests {
             .into_token(&algorithm)
             .unwrap();
 
-        let jwt = Jwt::<String>::verify(&token, &algorithm)
+        let jwt = Jwt::<String>::check(&token, &algorithm)
             .unwrap();
     }
 
@@ -36,7 +36,7 @@ mod tests {
         let algorithm_2 = HS256Algorithm::new("else".as_bytes())
             .unwrap();
 
-        let jwt = Jwt::<String>::verify(&token, &algorithm_2);
+        let jwt = Jwt::<String>::check(&token, &algorithm_2);
 
         assert!(jwt.is_err());
     }
