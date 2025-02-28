@@ -190,6 +190,11 @@ where T : Serialize + for<'a> Deserialize<'a>,
         self
     }
 
+    pub fn with_merge(mut self, other: &JwtClaims) -> Self {
+        self.claims = self.claims.with_merge(other);
+        self
+    }
+
     /// Returns a reference to the payload for this token.
     pub fn payload(&self) -> &T {
         &self.payload
