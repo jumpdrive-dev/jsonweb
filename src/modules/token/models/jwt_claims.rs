@@ -97,6 +97,20 @@ impl JwtClaims {
         }
     }
 
+    pub fn no_expiry() -> JwtClaims {
+        let now_timestamp = Utc::now().timestamp();
+
+        JwtClaims {
+            iss: None,
+            sub: None,
+            aud: None,
+            exp: None,
+            nbf: Some(now_timestamp),
+            iat: Some(now_timestamp),
+            jti: None,
+        }
+    }
+
     pub fn grace(grace: i64) -> JwtClaims {
         let now_timestamp = Utc::now().timestamp();
 
