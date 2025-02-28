@@ -80,7 +80,7 @@ impl JwtClaims {
             || self.iat.is_some()
             || self.jti.is_some();
 
-        any_set
+        !any_set
     }
 
     pub fn now() -> JwtClaims {
@@ -145,7 +145,7 @@ impl JwtClaims {
         self
     }
 
-    pub fn issued_at_timestamp(mut self, timestamp: i64) -> self {
+    pub fn issued_at_timestamp(mut self, timestamp: i64) -> Self {
         self.iat = Some(timestamp);
         self
     }

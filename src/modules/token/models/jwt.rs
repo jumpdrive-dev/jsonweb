@@ -155,7 +155,7 @@ where T : Serialize + for<'a> Deserialize<'a>,
     }
 
     /// Sets the `iat` claim on the JWT.
-    pub fn issued_at_timestamp(mut self, timestamp: i64) -> self {
+    pub fn issued_at_timestamp(mut self, timestamp: i64) -> Self {
         self.claims.iat = Some(timestamp);
         self
     }
