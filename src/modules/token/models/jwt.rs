@@ -142,6 +142,10 @@ where T : Serialize + for<'a> Deserialize<'a>,
     pub fn payload(&self) -> &T {
         &self.payload
     }
+
+    pub fn into_payload(self) -> T {
+        self.payload
+    }
 }
 
 impl Default for Jwt<Value> {
